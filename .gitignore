@@ -54,3 +54,6 @@ _avast_/
 # Office lock/temp files
 ~$*.docx
 ~$*
+
+.vercel
+.env*
