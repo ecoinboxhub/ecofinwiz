@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../config/theme.dart';
+import '../../config/app_config.dart';
 
 /// User-friendly error fallback widget for MaterialApp.errorBuilder.
 /// Shows a friendly error screen with retry/go home/report actions.

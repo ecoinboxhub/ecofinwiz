@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'config/theme.dart';
 import 'config/app_config.dart';
 import 'core/errors/app_error_handler.dart';
@@ -20,6 +21,7 @@ import 'widgets/error_fallback.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeAppConfig();
+  _installErrorWidgetBuilder();
 
   final sentryDsn = const String.fromEnvironment('SENTRY_DSN');
   if (sentryDsn.isNotEmpty) {
@@ -39,6 +41,11 @@ Future<void> main() async {
   } else {
     runApp(const EcoFinwizeApp());
   }
+}
+
+/// Main entrypoint — installs a custom widget for framework build errors.
+void _installErrorWidgetBuilder() {
+  ErrorWidget.builder = (details) => ErrorFallbackWidget(errorDetails: details);
 }
 
 class EcoFinwizeApp extends StatelessWidget {
@@ -76,13 +83,6 @@ class _EcoFinwizeAppInner extends StatelessWidget {
         AppErrorHandler.setCurrentRoute(settings.name);
         return null; // Use default routing
       },
-      // Custom error widget for uncaught errors
-      errorBuilder: (context, errorDetails) => ErrorFallbackWidget(
-        errorDetails: errorDetails,
-        onRetry: () {
-          // App will restart on next launch
-        },
-      ),
     );
   }
 }

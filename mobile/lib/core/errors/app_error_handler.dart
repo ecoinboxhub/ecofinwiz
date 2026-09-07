@@ -84,7 +84,7 @@ class AppErrorHandler {
   }
 
   static void _onFlutterError(FlutterErrorDetails details) {
-    _handleError(details.exception, details.stack, 'FlutterError', context: details.context);
+    _handleError(details.exception, details.stack, 'FlutterError', {'context': details.context?.toString()});
   }
 
   static void _handleError(
@@ -145,7 +145,6 @@ class AppErrorHandler {
       await Sentry.captureException(
         error,
         stackTrace: stack,
-        hint: source != null ? {'source': source} : null,
         withScope: (scope) {
           scope.setTag('source', source ?? 'unknown');
           scope.setTag('flavor', appConfig.flavor.name);

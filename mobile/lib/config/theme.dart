@@ -10,6 +10,8 @@ class AppTheme {
   static const Color ink = Color(0xFF123334);
   static const Color muted = Color(0xFF5E7371);
   static const Color softMuted = Color(0xFF93A7A3);
+  static const Color textPrimary = ink;
+  static const Color textSecondary = muted;
   static const Color bg = Color(0xFFF6F9F7);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color border = Color(0xFFE3EBE7);
@@ -17,6 +19,11 @@ class AppTheme {
   static const Color error = Color(0xFFC65D5A);
   static const Color errorSoft = Color(0xFFFCEAE9);
   static const Color goldDark = Color(0xFF8A6A1F);
+  static const Color primaryLight = Color(0xFF55B6A7);
+  static const Color lightBackground = Color(0xFFF6F9F7);
+  static const Color darkBackground = Color(0xFF0C1E20);
+  static const Color lightCardBackground = Color(0xFFFFFFFF);
+  static const Color darkCardBackground = Color(0xFF173032);
 
   static const double screenPadding = 20;
   static const double authPadding = 24;
@@ -60,6 +67,38 @@ class AppTheme {
         bodySmall: TextStyle(fontSize: 12, color: softMuted)),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: surface, selectedItemColor: primary, unselectedItemColor: softMuted, type: BottomNavigationBarType.fixed, elevation: 8),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: const ColorScheme.dark(primary: mint, secondary: gold, tertiary: mint, error: error, surface: darkCardBackground),
+      scaffoldBackgroundColor: darkBackground,
+      appBarTheme: const AppBarTheme(backgroundColor: darkCardBackground, foregroundColor: Colors.white, elevation: 0, centerTitle: true,
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+      cardTheme: CardTheme(color: darkCardBackground, elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius), side: const BorderSide(color: Colors.white10)),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4)),
+      inputDecorationTheme: InputDecorationTheme(filled: true, fillColor: darkCardBackground,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(inputRadius), borderSide: const BorderSide(color: Colors.white12)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(inputRadius), borderSide: const BorderSide(color: Colors.white12)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(inputRadius), borderSide: const BorderSide(color: mint, width: 2)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14)),
+      elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(
+        backgroundColor: primary, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(buttonHeight),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(buttonRadius)),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600))),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+        headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+        titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+        bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
+        bodySmall: TextStyle(fontSize: 12, color: Colors.white54)),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: darkCardBackground, selectedItemColor: mint, unselectedItemColor: Colors.white54, type: BottomNavigationBarType.fixed, elevation: 8),
     );
   }
 }
