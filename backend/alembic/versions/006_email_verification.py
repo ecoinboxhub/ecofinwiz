@@ -1,7 +1,7 @@
 """Add is_email_verified column to users table
 
 Revision ID: 006
-Revises: 005_content_mongodb_to_postgres
+Revises: 005
 Create Date: 2026-07-14
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 revision: str = "006"
-down_revision: Union[str, None] = "005_content_mongodb_to_postgres"
+down_revision: Union[str, None] = "005"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
