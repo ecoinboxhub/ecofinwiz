@@ -1,59 +1,64 @@
-# Python
+# ── Python ────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
+*.pyo
 *.egg-info/
-dist/
-build/
+*.egg
 .venv/
 venv/
-*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
 
-# Environment
-.env
-.env.local
-.env.*
-!.env.example
+# ── Node / Vite ──────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.vite/
+*.tsbuildinfo
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Docker
-pgdata/
-mongodata/
-
-# Flutter
+# ── Flutter / Dart ───────────────────────────────────────
 mobile/.dart_tool/
 mobile/build/
 mobile/.packages
 mobile/.pub-cache/
-mobile/pubspec.lock
+*.iml
 
-# Node
-frontend/node_modules/
-frontend/dist/
-frontend/.next/
+# ── Environment / Secrets ────────────────────────────────
+.env
+.env.*
+!.env.example
 
-# Alembic
-backend/alembic/versions/*.pyc
-
-# Logs
+# ── Logs ─────────────────────────────────────────────────
 *.log
 *.log.*
 *.err
+*.out
 
-# Antivirus quarantine
+# ── IDE / Editor ─────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Docker local volumes ─────────────────────────────────
+pgdata/
+mongodata/
+
+# ── Deployment tooling ───────────────────────────────────
+.vercel/
+
+# ── Antivirus quarantine ─────────────────────────────────
 _avast_/
 
-# Office lock/temp files
+# ── Office lock / temp files ─────────────────────────────
 ~$*.docx
 ~$*
-
-.vercel
-.env*

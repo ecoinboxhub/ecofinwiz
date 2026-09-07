@@ -1,7 +1,7 @@
 # Finwize Mobile — UI/UX Humanization & Design-System Update Prompt
 
 > **Target**: `mobile/` Flutter app (Android APK). **Repo root**: `C:\Users\ibrah\Documents\Gemini\Fellow_AI_Fintech_NextGen_Leaders_Fellowship_2026\Finwize`
-> **Reference screens**: `C:\Users\ibrah\Documents\Gemini\Fellow_AI_Fintech_NextGen_Leaders_Fellowship_2026\Finwize\screen\pinterest screens`
+> **Reference screens**: `screen/references/`
 > **Run all Flutter commands from `mobile/`** using `& "C:\src\flutter\bin\flutter.bat" ...`
 
 ---
