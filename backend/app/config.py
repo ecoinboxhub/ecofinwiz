@@ -198,8 +198,9 @@ class Settings(BaseSettings):
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "case_sensitive": False}
 
+    @classmethod
     def settings_customise_sources(
-        self,
+        cls,
         settings_cls,
         init_settings,
         env_settings,
