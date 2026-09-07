@@ -1,0 +1,79 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+android {
+    namespace = "com.finwize.finwize"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = "25.1.8937393"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    defaultConfig {
+        applicationId = "com.finwize.finwize"
+        minSdk = 24
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+    flavorDimensions += "app"
+
+    productFlavors {
+        dev {
+            dimension = "app"
+            applicationId = "com.finwize.finwize.dev"
+            versionNameSuffix = "-dev"
+            // Keep the emulator/localhost default for local development.
+            // The API base URL is resolved in Dart via ApiConfig using the
+            // FLUTTER_APP_FLAVOR dart-define that --flavor injects.
+        }
+        staging {
+            dimension = "app"
+            applicationId = "com.finwize.finwize.staging"
+            versionNameSuffix = "-staging"
+        }
+        production {
+            dimension = "app"
+            applicationId = "com.finwize.finwize"
+            versionNameSuffix = ""
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

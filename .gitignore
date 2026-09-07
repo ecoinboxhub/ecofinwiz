@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Environment
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+pgdata/
+mongodata/
+
+# Flutter
+mobile/.dart_tool/
+mobile/build/
+mobile/.packages
+mobile/.pub-cache/
+mobile/pubspec.lock
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+
+# Alembic
+backend/alembic/versions/*.pyc
+
+# Logs
+*.log
+*.log.*
+*.err
+
+# Antivirus quarantine
+_avast_/
+
+# Office lock/temp files
+~$*.docx
+~$*

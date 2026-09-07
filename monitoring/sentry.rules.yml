@@ -1,0 +1,236 @@
+# Sentry Alert Rules Configuration
+#
+# These rules define when alerts should be triggered in Sentry.
+# Import via Sentry UI: Settings > Alerts > New Alert Rule > Import from YAML
+# Or configure manually in Sentry dashboard.
+
+---
+# Critical: High error rate affecting users
+- name: "High Error Rate - Backend"
+  description: "Triggered when backend error rate exceeds 1% over 5 minutes"
+  condition:
+    query: 'project:finwize-backend level:error'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 1
+    thresholdType: "percent"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "oncall@finwize.app"
+    - type: "slack"
+      target: "#alerts-critical"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:backend"
+    - "severity:critical"
+
+- name: "High Error Rate - Frontend"
+  description: "Triggered when frontend error rate exceeds 1% over 5 minutes"
+  condition:
+    query: 'project:finwize-frontend level:error'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 1
+    thresholdType: "percent"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "oncall@finwize.app"
+    - type: "slack"
+      target: "#alerts-critical"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:frontend"
+    - "severity:critical"
+
+- name: "High Error Rate - Mobile"
+  description: "Triggered when mobile error rate exceeds 1% over 5 minutes"
+  condition:
+    query: 'project:finwize-mobile level:error'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 1
+    thresholdType: "percent"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "oncall@finwize.app"
+    - type: "slack"
+      target: "#alerts-critical"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:mobile"
+    - "severity:critical"
+
+# Critical: 5xx server errors
+- name: "5xx Error Spike - Backend"
+  description: "Triggered when 5xx errors exceed 5% of requests over 5 minutes"
+  condition:
+    query: 'project:finwize-backend transaction.status:5xx'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 5
+    thresholdType: "percent"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "oncall@finwize.app"
+    - type: "slack"
+      target: "#alerts-critical"
+    - type: "pagerduty"
+      target: "finwize-backend"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:backend"
+    - "severity:critical"
+
+# Warning: High latency
+- name: "High P95 Latency - API"
+  description: "Triggered when P95 latency exceeds 2 seconds over 5 minutes"
+  condition:
+    query: 'project:finwize-backend type:transaction'
+    aggregation: "percentile(95.0)"
+    timeWindow: "5m"
+    threshold: 2000
+    thresholdType: "milliseconds"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "team-backend@finwize.app"
+    - type: "slack"
+      target: "#alerts-warning"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:backend"
+    - "severity:warning"
+
+- name: "High P95 Latency - Frontend"
+  description: "Triggered when frontend P95 page load exceeds 3 seconds over 5 minutes"
+  condition:
+    query: 'project:finwize-frontend type:transaction transaction.op:"pageload"'
+    aggregation: "percentile(95.0)"
+    timeWindow: "5m"
+    threshold: 3000
+    thresholdType: "milliseconds"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "team-frontend@finwize.app"
+    - type: "slack"
+      target: "#alerts-warning"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:frontend"
+    - "severity:warning"
+
+# Warning: Crash rate increase (mobile)
+- name: "Crash Rate Increase - Mobile"
+  description: "Triggered when mobile crash-free sessions drop below 99%"
+  condition:
+    query: 'project:finwize-mobile type:session'
+    aggregation: "percentile(99.0)"
+    timeWindow: "1h"
+    threshold: 99
+    thresholdType: "percent"
+    compareType: "lessThan"
+  actions:
+    - type: "email"
+      target: "team-mobile@finwize.app"
+    - type: "slack"
+      target: "#alerts-warning"
+  frequency: "1h"
+  environment: ["staging", "production"]
+  tags:
+    - "team:mobile"
+    - "severity:warning"
+
+# Info: New error types detected
+- name: "New Error Type Detected"
+  description: "Triggered when a new error type appears in the last hour"
+  condition:
+    query: 'project:finwize-* level:error'
+    aggregation: "count_unique(error.type)"
+    timeWindow: "1h"
+    threshold: 1
+    thresholdType: "count"
+    compareType: "greaterThan"
+  actions:
+    - type: "slack"
+      target: "#alerts-info"
+  frequency: "1h"
+  environment: ["staging", "production"]
+  tags:
+    - "team:all"
+    - "severity:info"
+
+# Custom: Payment failures
+- name: "Payment Failure Spike"
+  description: "Triggered when payment-related errors spike"
+  condition:
+    query: 'project:finwize-backend error.type:"PaymentException" OR error.message:*payment* OR error.message:*paystack* OR error.message:*flutterwave*'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 10
+    thresholdType: "count"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "payments@finwize.app"
+    - type: "slack"
+      target: "#alerts-payments"
+    - type: "pagerduty"
+      target: "finwize-payments"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:payments"
+    - "severity:critical"
+
+# Custom: AI service failures
+- name: "AI Service Failure Spike"
+  description: "Triggered when AI/LLM service errors spike"
+  condition:
+    query: 'project:finwize-backend error.type:"AIServiceError" OR error.message:*openrouter* OR error.message:*groq* OR error.message:*pinecone*'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 20
+    thresholdType: "count"
+    compareType: "greaterThan"
+  actions:
+    - type: "email"
+      target: "team-ai@finwize.app"
+    - type: "slack"
+      target: "#alerts-ai"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:ai"
+    - "severity:warning"
+
+# Custom: Rate limiting
+- name: "Rate Limit Exceeded Spike"
+  description: "Triggered when rate limit errors spike (possible attack or misconfiguration)"
+  condition:
+    query: 'project:finwize-backend error.code:"RATE_LIMITED"'
+    aggregation: "count()"
+    timeWindow: "5m"
+    threshold: 100
+    thresholdType: "count"
+    compareType: "greaterThan"
+  actions:
+    - type: "slack"
+      target: "#alerts-security"
+    - type: "email"
+      target: "security@finwize.app"
+  frequency: "5m"
+  environment: ["staging", "production"]
+  tags:
+    - "team:security"
+    - "severity:warning"

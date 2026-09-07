@@ -1,0 +1,12 @@
+.env
+.env.*
+*.log
+*.log.*
+*.err
+__pycache__
+*.pyc
+.pytest_cache
+_avast_
+tests/
+Dockerfile
+Dockerfile.prod

@@ -1,0 +1,39 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "autoprefixer": "^10.5.0",
+    "jsdom": "^26.0.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12",
+    "vitest": "^3.1.0"
+  },
+  "dependencies": {
+    "@react-oauth/google": "^0.13.5",
+    "@sentry/react": "^10.70.0",
+    "@testing-library/dom": "^10.4.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "axios": "^1.17.0",
+    "lucide-react": "^1.18.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.17.0",
+    "recharts": "^2.13.3"
+  }
+}

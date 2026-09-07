@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8100:8100"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8100 --reload
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: finwize
+      POSTGRES_PASSWORD: finwize
+      POSTGRES_DB: finwize
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finwize"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
+  mongodata:

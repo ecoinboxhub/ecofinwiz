@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-sky: 14 165 233;
+    --color-gold: 245 158 11;
+    --color-orange: 249 115 22;
+    --color-rose: 244 63 94;
+  }
+  .dark {
+    --color-sky: 56 189 248;
+    --color-gold: 251 191 36;
+    --color-orange: 251 146 60;
+    --color-rose: 251 113 133;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-sky-500 hover:bg-sky-600 text-white font-medium px-6 py-2.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-white border-2 border-sky-500 text-sky-600 font-medium px-6 py-2.5 rounded-xl transition-all active:scale-95 hover:bg-sky-50;
+  }
+  .btn-gold {
+    @apply bg-gold-400 hover:bg-gold-500 text-white font-medium px-6 py-2.5 rounded-xl transition-all active:scale-95;
+  }
+  .btn-danger {
+    @apply bg-rose-500 hover:bg-rose-600 text-white font-medium px-6 py-2.5 rounded-xl transition-all active:scale-95;
+  }
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5;
+  }
+  .input-field {
+    @apply w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent transition-all bg-gray-50 dark:bg-gray-700 dark:text-gray-100;
+  }
+  .nav-link {
+    @apply flex flex-col items-center gap-1 text-xs font-medium text-gray-400 dark:text-gray-500 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 rounded-lg;
+  }
+  .nav-link.active {
+    @apply text-sky-500 dark:text-sky-400;
+  }
+  .skip-link {
+    @apply absolute -top-10 left-2 z-50 bg-sky-600 text-white px-4 py-2 rounded-b-lg text-sm font-medium transition-all focus:top-0;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-sky { @apply badge bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300; }
+  .badge-gold { @apply badge bg-gold-100 dark:bg-gold-900/40 text-gold-700 dark:text-gold-300; }
+  .badge-orange { @apply badge bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300; }
+  .badge-rose { @apply badge bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300; }
+  .badge-green { @apply badge bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300; }
+}
+
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-sky-500;
+}
+html { scroll-behavior: smooth; }
+html.dark { color-scheme: dark; }
+body { @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }

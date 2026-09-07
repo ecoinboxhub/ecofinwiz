@@ -1,0 +1,58 @@
+# Render Blueprint — EcoFinwize API (FastAPI backend)
+#
+# Applies via the Render Dashboard ("New +" → "Blueprint") or Render CLI:
+#   render blueprint apply
+#
+# Secrets (SECRET_KEY, DATABASE_URL, REDIS_URL, LLM/payment keys) are set in the
+# Render dashboard after creation and are deliberately NOT listed here.
+services:
+  - type: web
+    name: ecofinwiz-api
+    runtime: docker
+    repo: https://github.com/ecoinboxhub/ecofinwiz
+    plan: free
+    dockerfilePath: ./backend/Dockerfile.prod
+    dockerContext: ./backend
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: EcoFinwize
+      - key: APP_VERSION
+        value: 0.1.0
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: ALGORITHM
+        value: HS256
+      - key: CORS_ORIGINS
+        value: http://localhost:5300,http://localhost:3000,https://ecofinwiz.vercel.app
+      - key: FRONTEND_URL
+        value: https://ecofinwiz.vercel.app
+      - key: PINECONE_ENVIRONMENT
+        value: us-east-1-aws
+      - key: PINECONE_INDEX_NAME
+        value: ecofinwize
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-4o-mini
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: EMAIL_FROM_ADDRESS
+        value: noreply@finwize.app
+      - key: EMAIL_FROM_NAME
+        value: EcoFinwize
+      - key: AFRICAS_TALKING_USERNAME
+        value: finwize
+      - key: SMS_FROM_NUMBER
+        value: FINWIZE
+      - key: POSTHOG_HOST
+        value: https://app.posthog.com
+      - key: S3_REGION
+        value: eu-west-1
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
