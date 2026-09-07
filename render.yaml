@@ -11,7 +11,7 @@ services:
     runtime: docker
     repo: https://github.com/ecoinboxhub/ecofinwiz
     plan: free
-    dockerfilePath: ./backend/Dockerfile.prod
+    dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     healthCheckPath: /api/v1/health
     autoDeploy: true
