@@ -47,7 +47,12 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-ReactDOM.createRoot(document.getElementById("app")!).render(
+ReactDOM.createRoot(document.getElementById("app")!, {
+  onUncaughtError: (error) => {
+    console.error("[BOOT-FAIL] message:", (error as Error).message);
+    console.error("[BOOT-FAIL] stack:", (error as Error).stack);
+  },
+}).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
