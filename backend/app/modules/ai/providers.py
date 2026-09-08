@@ -38,7 +38,9 @@ class OpenAICompatibleProvider(LLMProvider):
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json", **self.extra_headers}
         payload = {"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens, "stream": True}
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        timeout = httpx.Timeout(connect=10.0, read=90.0, write=30.0, pool=30.0)
+        limits = httpx.Limits(max_connections=8, max_keepalive_connections=4)
+        async with httpx.AsyncClient(timeout=timeout, limits=limits) as client:
             async with client.stream("POST", f"{self.base_url}/chat/completions", json=payload, headers=headers) as response:
                 if response.status_code != 200:
                     error_body = await response.aread()
@@ -66,7 +68,7 @@ class OpenAICompatibleProvider(LLMProvider):
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json", **self.extra_headers}
         payload = {"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens, "stream": False}
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(connect=10.0, read=90.0, write=30.0, pool=30.0), limits=httpx.Limits(max_connections=8, max_keepalive_connections=4)) as client:
             response = await client.post(f"{self.base_url}/chat/completions", json=payload, headers=headers)
             if response.status_code != 200:
                 logger.error(f"[{self.name}] LLM API error {response.status_code}: {response.text[:200]}")
@@ -109,7 +111,7 @@ class FallbackProvider(LLMProvider):
             except Exception as e:
                 last_error = str(e)
                 logger.warning(f"FallbackProvider: {provider.name} exception: {e}, trying next...")
-        yield last_error or "All providers failed"
+        raise RuntimeError(last_error or "All AI providers failed")
 
     async def chat(self, messages, model=None, temperature=0.7, max_tokens=2048) -> str:
         for provider in self.providers:
@@ -148,6 +150,18 @@ def _build_openrouter_provider() -> Optional[OpenAICompatibleProvider]:
     )
 
 
+def _build_openai_provider() -> Optional[OpenAICompatibleProvider]:
+    key = settings.openai_api_key or ""
+    if not key:
+        return None
+    return OpenAICompatibleProvider(
+        base_url="https://api.openai.com/v1",
+        api_key=key,
+        default_model=settings.openai_model or "gpt-4o-mini",
+        name="openai",
+    )
+
+
 def get_provider(name: str = "fallback") -> LLMProvider:
     """Get an LLM provider. Always uses fallback chain for reliability."""
     if name == "groq":
@@ -164,10 +178,10 @@ def get_provider(name: str = "fallback") -> LLMProvider:
         logger.warning("OpenRouter not configured, falling back to Groq")
         return _build_groq_provider() or _build_openrouter_provider()
 
-    # Default: fallback chain (groq -> openrouter)
-    providers = [p for p in [_build_groq_provider(), _build_openrouter_provider()] if p]
+    # Default: fallback chain (groq -> openrouter -> openai)
+    providers = [p for p in [_build_groq_provider(), _build_openrouter_provider(), _build_openai_provider()] if p]
     if not providers:
-        raise RuntimeError("No LLM providers configured. Set GROQ_API_KEY or OPENROUTER_API_KEY.")
+        raise RuntimeError("No LLM providers configured. Set GROQ_API_KEY, OPENROUTER_API_KEY, or OPENAI_API_KEY.")
     if len(providers) == 1:
         return providers[0]
     return FallbackProvider(providers)

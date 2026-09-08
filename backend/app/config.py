@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     pinecone_index_name: str = "finwize-knowledge"
 
     openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"
 
     openrouter_api_key: str = ""
     openrouter_model: str = "openai/gpt-4o-mini"

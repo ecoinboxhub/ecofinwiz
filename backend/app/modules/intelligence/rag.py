@@ -145,17 +145,21 @@ async def answer_with_rag(query: str, top_k: int = 5) -> Optional[dict]:
 
     from app.config import get_settings
     s = get_settings()
-    if not s.openrouter_api_key and not s.groq_api_key:
+    if not s.openrouter_api_key and not s.groq_api_key and not s.openai_api_key:
         return {"query": query, "results": results, "answer": None}
 
     try:
         from openai import AsyncOpenAI
 
-        client = AsyncOpenAI(
-            base_url="https://openrouter.ai/api/v1" if s.openrouter_api_key else "https://api.groq.com/openai/v1",
-            api_key=s.openrouter_api_key or s.groq_api_key,
-        )
-        model = s.openrouter_model if s.openrouter_api_key else s.groq_model
+        if s.openai_api_key:
+            client = AsyncOpenAI(api_key=s.openai_api_key)
+            model = s.openai_model or "gpt-4o-mini"
+        elif s.openrouter_api_key:
+            client = AsyncOpenAI(base_url="https://openrouter.ai/api/v1", api_key=s.openrouter_api_key)
+            model = s.openrouter_model
+        else:
+            client = AsyncOpenAI(base_url="https://api.groq.com/openai/v1", api_key=s.groq_api_key)
+            model = s.groq_model
 
         prompt = f"""You are a helpful financial assistant for African youths and SMEs.
 Answer the question based on the provided context. If the context doesn't contain enough information, say so.
