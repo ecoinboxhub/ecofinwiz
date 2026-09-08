@@ -69,7 +69,7 @@ export default function Budget() {
           <h1 className="text-xl font-bold text-gray-800">{t("budget.title")}</h1>
           <p className="text-sm text-gray-400">{t("budget.activeBudgets", budgets.length.toString())}</p>
         </div>
-        <button onClick={() => { setShowForm(true); setEditing(null); setCategory(""); setAmount(""); setPeriod("monthly"); }} className="btn-primary !p-3 !rounded-xl">
+        <button onClick={() => { setShowForm(true); setEditing(null); setCategory(""); setAmount(""); setPeriod("monthly"); }} className="btn-primary !p-3 !rounded-xl" aria-label={t("budget.create")}>
           <Plus className="w-5 h-5" />
         </button>
       </div>

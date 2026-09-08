@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "../i18n/useTranslations";
-import { googleAuthEnabled } from "../config/google";
+import { googleAuthVisible } from "../config/google";
 
 export default function Register() {
   useEffect(() => { document.title = "Register - Finwize"; }, []);
@@ -60,7 +60,7 @@ export default function Register() {
         <div className="card space-y-4">
           {error && <div className="bg-rose-50 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 text-sm px-4 py-2.5 rounded-xl" id="register-error" role="alert">{error}</div>}
 
-          {googleAuthEnabled && (
+          {googleAuthVisible && (
           <>
           <div className="flex justify-center">
             <GoogleLogin

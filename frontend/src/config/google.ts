@@ -6,3 +6,12 @@ export const GOOGLE_CLIENT_ID: string =
   DEFAULT_CLIENT_ID;
 
 export const googleAuthEnabled = GOOGLE_CLIENT_ID !== "disabled";
+
+const ALLOWED_ORIGINS = [
+  "https://ecofinwiz.vercel.app",
+  "http://localhost:5173",
+];
+
+export const googleOriginAllowed = ALLOWED_ORIGINS.includes(window.location.origin);
+
+export const googleAuthVisible = googleAuthEnabled && googleOriginAllowed;

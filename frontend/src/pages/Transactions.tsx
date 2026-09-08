@@ -44,7 +44,7 @@ export default function Transactions() {
           <h1 className="text-xl font-bold text-gray-800">{t("transactions.title")}</h1>
           <p className="text-sm text-gray-400">{t("transactions.entries", txns.length.toString())}</p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl">
+        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl" aria-label={t("transactions.add")}>
           <Plus className="w-5 h-5" />
         </button>
       </div>

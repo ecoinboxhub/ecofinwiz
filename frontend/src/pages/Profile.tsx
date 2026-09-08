@@ -33,7 +33,8 @@ export default function Profile() {
 
   if (user?.is_admin) menuItems.push({ icon: Settings, label: t("profile.adminDashboard"), to: "/admin" });
 
-  const planLabel = user?.plan === "free" ? t("profile.freePlan") : user?.plan === "pro" ? t("profile.proPlan") : t("profile.businessPlan");
+  const plan = user?.plan === "pro" || user?.plan === "business" ? user.plan : "free";
+  const planLabel = plan === "pro" ? t("profile.proPlan") : plan === "business" ? t("profile.businessPlan") : t("profile.freePlan");
 
   return (
     <div className="px-4 py-6 max-w-lg mx-auto space-y-6">
@@ -48,16 +49,16 @@ export default function Profile() {
           <Link
             to="/pricing"
             className={`inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full ${
-              user?.plan === "free"
+              plan === "free"
                 ? "bg-gray-100 text-gray-500"
-                : user?.plan === "pro"
+                : plan === "pro"
                 ? "bg-sky-100 text-sky-600"
                 : "bg-gold-100 text-gold-600"
             }`}
           >
-            {user?.plan === "free" ? <Star className="w-3 h-3" /> : <Crown className="w-3 h-3" />}
+            {plan === "free" ? <Star className="w-3 h-3" /> : <Crown className="w-3 h-3" />}
             {planLabel}
-            {user?.plan !== "free" && " \u2713"}
+            {plan !== "free" && " \u2713"}
           </Link>
         </div>
       </div>

@@ -15,6 +15,8 @@ class UserService:
         for key, value in kwargs.items():
             if value is not None:
                 setattr(user, key, value)
+        if kwargs.get("persona_type"):
+            user.onboarding_completed = True
         await self.db.flush()
         await self.db.refresh(user)
         return user

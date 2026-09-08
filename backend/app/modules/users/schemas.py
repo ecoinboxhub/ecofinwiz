@@ -28,6 +28,7 @@ class UserProfileResponse(BaseModel):
     onboarding_completed: bool = False
     is_email_verified: bool = False
     is_admin: bool = False
+    plan: str | None = None
     created_at: datetime
     updated_at: datetime
 
