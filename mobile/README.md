@@ -9,8 +9,8 @@ The app supports three build flavors, each with its own API endpoint, bundle ID,
 | Flavor | API Base URL | Bundle ID | App Name |
 |--------|--------------|-----------|----------|
 | `development` | `http://10.0.2.2:8100/api/v1` (emulator) | `com.finwize.finwize.dev` | EcoFinwize Dev |
-| `staging` | `https://staging-api.finwize.app/api/v1` | `com.finwize.finwize.staging` | EcoFinwize Staging |
-| `production` | `https://api.finwize.app/api/v1` | `com.finwize.finwize` | EcoFinwize |
+| `staging` | `https://ecofinwiz-api.onrender.com/api/v1` | `com.finwize.finwize.staging` | EcoFinwize Staging |
+| `production` | `https://ecofinwiz-api.onrender.com/api/v1` | `com.finwize.finwize` | EcoFinwize |
 
 ## Quick Start
 
@@ -48,7 +48,7 @@ flutter build apk --flavor staging --dart-define=FLUTTER_APP_FLAVOR=staging
 flutter build apk --flavor production --dart-define=FLUTTER_APP_FLAVOR=production
 
 # Override API URL at build time (e.g., point dev build at staging)
-flutter build apk --flavor development --dart-define=FLUTTER_APP_FLAVOR=development --dart-define=API_BASE_URL=https://staging-api.finwize.app/api/v1
+flutter build apk --flavor development --dart-define=FLUTTER_APP_FLAVOR=development --dart-define=API_BASE_URL=https://ecofinwiz-api.onrender.com/api/v1
 ```
 
 ### Output Locations

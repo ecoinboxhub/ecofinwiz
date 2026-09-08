@@ -7,8 +7,8 @@ enum AppFlavor { development, staging, production }
 /// All values are resolved at startup; no runtime mutation.
 class AppConfig {
   static const String _defaultDevUrl = 'http://10.0.2.2:8100/api/v1';
-  static const String _defaultStagingUrl = 'https://staging-api.finwize.app/api/v1';
-  static const String _defaultProductionUrl = 'https://api.finwize.app/api/v1';
+  static const String _defaultStagingUrl = 'https://ecofinwiz-api.onrender.com/api/v1';
+  static const String _defaultProductionUrl = 'https://ecofinwiz-api.onrender.com/api/v1';
 
   /// Current build flavor (injected via `--flavor` → `FLUTTER_APP_FLAVOR` dart-define).
   final AppFlavor flavor;
@@ -46,7 +46,13 @@ class AppConfig {
   static Future<AppConfig> initialize() async {
     // Load .env file if present (non-secret config only)
     await dotenv.load(fileName: '.env').catchError((_) {});
+    return fromEnvironment();
+  }
 
+  /// Build configuration synchronously from compile-time dart-defines.
+  /// Used by [initializeAppConfig] and as a safe lazy fallback so the app
+  /// never crashes on an uninitialized config in tests.
+  static AppConfig fromEnvironment() {
     final flavorString = const String.fromEnvironment('FLUTTER_APP_FLAVOR');
     final flavor = _parseFlavor(flavorString);
 
@@ -91,6 +97,10 @@ class AppConfig {
     }
   }
 
+  /// Test-only accessor so flavor→URL resolution can be asserted.
+  @visibleForTesting
+  static String defaultBaseUrlForFlavor(AppFlavor flavor) => _defaultBaseUrlForFlavor(flavor);
+
   static String _appNameForFlavor(AppFlavor flavor) {
     switch (flavor) {
       case AppFlavor.staging:
@@ -122,11 +132,22 @@ class AppConfig {
   }
 }
 
-/// Global accessor initialized at startup.
-late final AppConfig appConfig;
+/// Global accessor initialized at startup. Lazily falls back to a synchronous
+/// build from dart-defines so tests never crash on an uninitialized config.
+AppConfig? _appConfig;
 
-/// Initialize [appConfig] globally. Must be called before [runApp].
+AppConfig get appConfig {
+  final resolved = _appConfig;
+  if (resolved != null) return resolved;
+  final fallback = AppConfig.fromEnvironment();
+  _appConfig = fallback;
+  return fallback;
+}
+
+/// Initialize [appConfig] globally. Call once before [runApp] to also load an
+/// optional `.env` file (dotenv). Re-runnable so tests can re-init per case.
 Future<void> initializeAppConfig() async {
-  appConfig = await AppConfig.initialize();
+  await dotenv.load(fileName: '.env').catchError((_) {});
+  _appConfig = AppConfig.fromEnvironment();
   debugPrint('AppConfig initialized: $appConfig');
 }

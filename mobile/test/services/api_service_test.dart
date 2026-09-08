@@ -3,14 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:finwize/config/app_config.dart';
+import 'package:finwize/config/app_config.dart';
 import 'package:finwize/services/api_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
+  setUp(() async {
     SharedPreferences.setMockInitialValues({});
     ApiService.debugClient = null;
+    await initializeAppConfig();
   });
 
   tearDown(() => ApiService.debugClient = null);
@@ -78,22 +81,24 @@ void main() {
     });
   });
 
-  group('ApiConfig.baseUrl flavor resolution', () {
-    test('defaults to emulator base URL in tests', () {
-      ApiConfig.testFlavor = null;
-      expect(ApiConfig.baseUrl, 'http://10.0.2.2:8100/api/v1');
+  group('AppConfig flavor→URL resolution', () {
+    test('defaults to emulator base URL in tests', () async {
+      final config = await AppConfig.initialize();
+      expect(config.apiBaseUrl, 'http://10.0.2.2:8100/api/v1');
     });
 
     test('staging flavor resolves to staging base URL', () {
-      ApiConfig.testFlavor = 'staging';
-      expect(ApiConfig.baseUrl, 'https://staging-api.finwize.app/api/v1');
-      ApiConfig.testFlavor = null;
+      expect(
+        AppConfig.defaultBaseUrlForFlavor(AppFlavor.staging),
+        'https://ecofinwiz-api.onrender.com/api/v1',
+      );
     });
 
     test('production flavor resolves to production base URL', () {
-      ApiConfig.testFlavor = 'production';
-      expect(ApiConfig.baseUrl, 'https://api.finwize.app/api/v1');
-      ApiConfig.testFlavor = null;
+      expect(
+        AppConfig.defaultBaseUrlForFlavor(AppFlavor.production),
+        'https://ecofinwiz-api.onrender.com/api/v1',
+      );
     });
   });
 }

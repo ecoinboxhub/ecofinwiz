@@ -5,14 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:finwize/config/app_config.dart';
 import 'package:finwize/providers/auth_provider.dart';
 import 'package:finwize/services/api_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
+  setUp(() async {
     SharedPreferences.setMockInitialValues({});
+    await initializeAppConfig();
   });
 
   tearDown(() => ApiService.debugClient = null);
