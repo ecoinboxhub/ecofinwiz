@@ -2,16 +2,19 @@
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "vite"
+      "framework": "vite",
+      "routes": [
+        { "handle": "filesystem" },
+        { "src": "/(.*)", "dest": "/index.html" }
+      ]
     }
   },
   "rewrites": [
-    { "handle": "filesystem" },
     {
       "source": "/(.*)",
       "destination": {
-        "service": "frontend",
-        "path": "index.html"
+        "type": "service",
+        "service": "frontend"
       }
     }
   ]
