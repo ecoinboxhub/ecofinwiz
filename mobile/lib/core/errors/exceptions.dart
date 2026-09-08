@@ -12,13 +12,13 @@ abstract class AppException implements Exception {
 
 /// Network-related errors (no connectivity, timeout, server unreachable).
 class NetworkException extends AppException {
-  const NetworkException(super.message, {super.code, super.details})
+  const NetworkException(super.message, {super.details})
       : super(code: 'NETWORK_ERROR');
 }
 
 /// Authentication/authorization errors (invalid token, expired, unauthorized).
 class AuthException extends AppException {
-  const AuthException(super.message, {super.code, super.details})
+  const AuthException(super.message, {super.details})
       : super(code: 'AUTH_ERROR');
 }
 
@@ -26,7 +26,7 @@ class AuthException extends AppException {
 class ServerException extends AppException {
   final int? statusCode;
 
-  const ServerException(super.message, {this.statusCode, super.code, super.details})
+  const ServerException(super.message, {this.statusCode, super.details})
       : super(code: 'SERVER_ERROR');
 }
 
@@ -34,13 +34,13 @@ class ServerException extends AppException {
 class ValidationException extends AppException {
   final Map<String, String>? fieldErrors;
 
-  const ValidationException(super.message, {this.fieldErrors, super.code, super.details})
+  const ValidationException(super.message, {this.fieldErrors, super.details})
       : super(code: 'VALIDATION_ERROR');
 }
 
 /// Not found errors (404).
 class NotFoundException extends AppException {
-  const NotFoundException(super.message, {super.code, super.details})
+  const NotFoundException(super.message, {super.details})
       : super(code: 'NOT_FOUND');
 }
 
@@ -48,19 +48,19 @@ class NotFoundException extends AppException {
 class RateLimitedException extends AppException {
   final int? retryAfterSeconds;
 
-  const RateLimitedException(super.message, {this.retryAfterSeconds, super.code, super.details})
+  const RateLimitedException(super.message, {this.retryAfterSeconds, super.details})
       : super(code: 'RATE_LIMITED');
 }
 
 /// Offline-first specific errors.
 class OfflineException extends AppException {
-  const OfflineException(super.message, {super.code, super.details})
+  const OfflineException(super.message, {super.details})
       : super(code: 'OFFLINE_ERROR');
 }
 
 /// Unknown/unexpected errors.
 class UnknownException extends AppException {
-  const UnknownException(super.message, {super.code, super.details})
+  const UnknownException(super.message, {super.details})
       : super(code: 'UNKNOWN_ERROR');
 }
 

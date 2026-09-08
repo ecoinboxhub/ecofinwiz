@@ -1,7 +1,7 @@
 name: finwize
 description: Finwize - Financial & Business Guidance for Africa
 publish_to: none
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.0.0

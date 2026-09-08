@@ -4,7 +4,6 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:finwize/config/app_config.dart';
-import 'package:finwize/config/app_config.dart';
 import 'package:finwize/services/api_service.dart';
 
 void main() {
