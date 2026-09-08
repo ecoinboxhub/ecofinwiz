@@ -280,7 +280,7 @@ async def get_course_progress(
 
     return CourseProgressResponse(
         course_id=course_id,
-        course_title=course["title"],
+        course_title=course.title,
         total_lessons=total_lessons,
         completed_lessons=completed_count,
         percentage=percentage,
