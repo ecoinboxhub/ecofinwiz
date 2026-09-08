@@ -33,7 +33,7 @@ export default function Forum() {
           <h1 className="text-xl font-bold text-gray-800">{t("forum.title")}</h1>
           <p className="text-sm text-gray-400">{t("forum.subtitle")}</p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl" aria-label={t("forum.post")}><Plus className="w-5 h-5" /></button>
+        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl" aria-label={t("forum.newTopic")}><Plus className="w-5 h-5" /></button>
       </div>
 
       {showForm && (

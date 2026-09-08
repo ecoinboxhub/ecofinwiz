@@ -37,7 +37,7 @@ export default function Invoices() {
           <h1 className="text-xl font-bold text-gray-800">{t("invoices.title")}</h1>
           <p className="text-sm text-gray-400">{t("invoices.count", invoices.length.toString())}</p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl" aria-label={t("invoices.create")}><Plus className="w-5 h-5" /></button>
+        <button onClick={() => setShowForm(true)} className="btn-primary !p-3 !rounded-xl" aria-label={t("invoices.new")}><Plus className="w-5 h-5" /></button>
       </div>
 
       {showForm && (

@@ -54,7 +54,7 @@ export default function BusinessTasks() {
 
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-gray-800">{t("businessTasks.tasksTitle")}</h2>
-        <button onClick={() => setShowForm(true)} className="btn-primary !p-2 !rounded-xl" aria-label={t("businessTasks.add")}><Plus className="w-4 h-4" /></button>
+        <button onClick={() => setShowForm(true)} className="btn-primary !p-2 !rounded-xl" aria-label={t("businessTasks.new")}><Plus className="w-4 h-4" /></button>
       </div>
 
       {showForm && (
