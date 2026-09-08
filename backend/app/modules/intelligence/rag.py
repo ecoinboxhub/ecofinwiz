@@ -3,6 +3,7 @@ Pinecone RAG (Retrieval-Augmented Generation) service.
 Gracefully falls back when Pinecone is not configured.
 """
 
+import asyncio
 import hashlib
 import json
 import logging
@@ -67,6 +68,21 @@ def _embed_text(text: str) -> list[float]:
     return [rng.random() for _ in range(1536)]
 
 
+async def _embed_async(text: str) -> list[float]:
+    """Prefer the async embedding API; fall back to local (threaded) encode."""
+    try:
+        from app.services.embedding_service import get_embedding_service
+
+        svc = get_embedding_service()
+        if svc:
+            vec = await svc.embed(text)
+            if vec:
+                return vec
+    except Exception as e:
+        logger.warning("async embedding failed: %s", e)
+    return await asyncio.to_thread(_embed_text, text)
+
+
 async def index_document(
     document_id: str,
     text: str,
@@ -78,7 +94,7 @@ async def index_document(
         chunks = _chunk_text(text)
         vectors = []
         for i, chunk in enumerate(chunks):
-            vec = _embed_text(chunk)
+            vec = await _embed_async(chunk)
             if not vec:
                 continue
             chunk_id = f"{document_id}-chunk-{i}"
@@ -87,7 +103,7 @@ async def index_document(
                 meta.update(metadata)
             vectors.append((chunk_id, vec, meta))
         if vectors:
-            _pinecone_index.upsert(vectors=vectors)
+            await asyncio.to_thread(_pinecone_index.upsert, vectors)
         logger.info("RAG: indexed %d chunks for document %s", len(vectors), document_id)
         return len(vectors)
     except Exception as e:
@@ -99,7 +115,9 @@ async def remove_document(document_id: str) -> bool:
     if not _has_pinecone:
         return False
     try:
-        _pinecone_index.delete(filter={"document_id": {"$eq": document_id}})
+        await asyncio.to_thread(
+            _pinecone_index.delete, filter={"document_id": {"$eq": document_id}}
+        )
         return True
     except Exception as e:
         logger.error("RAG: delete error: %s", e)
@@ -115,13 +133,13 @@ async def query_knowledge_base(
         return []
 
     try:
-        query_vec = _embed_text(query)
-        results = _pinecone_index.query(
-            vector=query_vec,
-            top_k=top_k,
-            include_metadata=True,
-            filter=filter_dict,
-        )
+        query_vec = await _embed_async(query)
+        if not query_vec:
+            return []
+        kwargs: dict = {"vector": query_vec, "top_k": top_k, "include_metadata": True}
+        if filter_dict:
+            kwargs["filter"] = filter_dict
+        results = await asyncio.to_thread(_pinecone_index.query, **kwargs)
         return [
             {
                 "text": match["metadata"].get("text", ""),
