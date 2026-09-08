@@ -1,10 +1,5 @@
-const CACHE_NAME = "finwize-v1";
-const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/assets/index.css",
-  "/assets/index.js",
-];
+const CACHE_NAME = "finwize-v2";
+const STATIC_ASSETS = ["/", "/index.html"];
 
 const API_CACHE = "finwize-api-v1";
 const API_CACHE_TTL = 5 * 60 * 1000;
@@ -31,6 +26,11 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return;
+  }
+
   const url = new URL(request.url);
 
   if (url.pathname.startsWith("/api/")) {
@@ -73,10 +73,6 @@ async function networkFirstWithCache(request, cacheName, ttl) {
   } catch {
     const cached = await caches.match(request);
     if (cached) {
-      const timestamp = parseInt(cached.headers.get("x-cache-timestamp") || "0", 10);
-      if (ttl && Date.now() - timestamp > ttl) {
-        return cached;
-      }
       return cached;
     }
     return new Response(JSON.stringify({ error: "offline", message: "You are offline" }), {
