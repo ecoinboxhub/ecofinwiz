@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class RegisterRequest(BaseModel):
@@ -38,9 +38,15 @@ class UserResponse(BaseModel):
     onboarding_completed: bool = False
     is_email_verified: bool = False
     is_admin: bool = False
+    plan: str = "free"
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+    @field_validator("plan")
+    @classmethod
+    def _plan_valid(cls, v: str) -> str:
+        return v if v in ("free", "pro", "business") else "free"
 
 
 class VerifyEmailRequest(BaseModel):
