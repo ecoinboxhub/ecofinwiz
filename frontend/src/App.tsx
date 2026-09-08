@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GOOGLE_CLIENT_ID, googleAuthEnabled } from "./config/google";
 import Layout from "./components/Layout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { DarkModeProvider } from "./context/DarkModeContext";
@@ -37,8 +38,6 @@ import Admin from "./pages/Admin";
 import PaymentCallback from "./pages/PaymentCallback";
 import Calculators from "./pages/Calculators";
 
-const GOOGLE_CLIENT_ID = "212233580664-j4diufuimp6qimk69sevf1km53oq1k1p.apps.googleusercontent.com";
-
 const HeavyPageErrorBoundary = ({ children }: { children: React.ReactNode }) => (
   <ErrorBoundary
     showDetails={import.meta.env.DEV}
@@ -49,8 +48,7 @@ const HeavyPageErrorBoundary = ({ children }: { children: React.ReactNode }) => 
 );
 
 export default function App() {
-  return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+  const app = (
       <DarkModeProvider>
       <Toaster position="top-center" toastOptions={{ duration: 3000, style: { borderRadius: "12px", padding: "12px 16px", fontSize: "14px" } }} />
       <ErrorBoundary showDetails={import.meta.env.DEV}>
@@ -91,6 +89,11 @@ export default function App() {
         </Routes>
       </ErrorBoundary>
       </DarkModeProvider>
-      </GoogleOAuthProvider>
+  );
+
+  return googleAuthEnabled ? (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>{app}</GoogleOAuthProvider>
+  ) : (
+    app
   );
 }

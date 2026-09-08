@@ -5,6 +5,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "../i18n/useTranslations";
 import client from "../api/client";
+import { googleAuthEnabled } from "../config/google";
 
 export default function Login() {
   useEffect(() => { document.title = "Login - Finwize"; }, []);
@@ -84,6 +85,8 @@ export default function Login() {
             <Link to="/forgot-password" className="text-xs text-sky-500 hover:underline">Forgot password?</Link>
           </div>
 
+          {googleAuthEnabled && (
+          <>
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200 dark:border-gray-600" /></div>
             <div className="relative flex justify-center"><span className="bg-white dark:bg-gray-800 px-3 text-sm text-gray-400 dark:text-gray-500">{t("login.or")}</span></div>
@@ -96,6 +99,8 @@ export default function Login() {
               useOneTap
             />
           </div>
+          </>
+          )}
 
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 pt-2">
             {t("login.noAccount")} <Link to="/register" className="text-sky-500 font-medium hover:underline">{t("login.signUp")}</Link>

@@ -86,7 +86,16 @@
 #### Google OAuth
 1. Go to Google Cloud Console → APIs & Services → Credentials
 2. Edit OAuth 2.0 Client ID → Regenerate Client Secret
-3. Update Authorized Redirect URIs if changed
+3. Update **Authorized Redirect URIs** if changed
+4. **Authorized JavaScript origins** must include every origin the app runs on
+   (the Google identity provider rejects the button with 403
+   "origin is not allowed for the given client ID" if one is missing):
+   - Production web: `https://ecofinwiz.vercel.app`
+   - Local dev (Vite): `http://localhost:5173`
+   - Any other deployed domains (custom domain, staging)
+5. The client ID used by the web app is `frontend/src/config/google.ts`
+   (overridable at build time with `VITE_GOOGLE_CLIENT_ID`); mobile has no
+   Google sign-in yet.
 
 #### Africa's Talking
 1. Go to https://account.africastalking.com/apps
