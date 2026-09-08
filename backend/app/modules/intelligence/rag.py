@@ -69,7 +69,7 @@ def _embed_text(text: str) -> list[float]:
 
 
 async def _embed_async(text: str) -> list[float]:
-    """Prefer the async embedding API; fall back to local (threaded) encode."""
+    """Prefer the async embedding API; never load local models in the hot path."""
     try:
         from app.services.embedding_service import get_embedding_service
 
@@ -79,8 +79,20 @@ async def _embed_async(text: str) -> list[float]:
             if vec:
                 return vec
     except Exception as e:
-        logger.warning("async embedding failed: %s", e)
-    return await asyncio.to_thread(_embed_text, text)
+        logger.debug("primary embedding failed: %s", e)
+
+    try:
+        from app.services.embedding_service import JinaEmbeddingService
+
+        jina = JinaEmbeddingService()
+        if jina.is_configured:
+            vec = await jina.embed(text)
+            if vec:
+                return vec
+    except Exception as e:
+        logger.debug("jina embedding failed: %s", e)
+
+    return []
 
 
 async def index_document(
