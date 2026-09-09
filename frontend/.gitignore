@@ -25,3 +25,6 @@ dist-ssr
 
 .vercel
 .env*
+
+# Keep the documented public env template (places secrets are NOT allowed)
+!.env.example

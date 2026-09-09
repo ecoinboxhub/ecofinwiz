@@ -13,7 +13,7 @@ export default function BlogDetail() {
     if (!id) return;
     client.get(`/blog/${id}`).then(({ data }) => {
       setPost(data);
-      document.title = `${data.title} - Finwize`;
+      document.title = `${data.title} - EcoFinwize`;
     }).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 

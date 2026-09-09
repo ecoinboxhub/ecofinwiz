@@ -13,7 +13,7 @@ export default function NewsDetail() {
     if (!id) return;
     client.get(`/news/${id}`).then(({ data }) => {
       setItem(data);
-      document.title = `${data.title} - Finwize`;
+      document.title = `${data.title} - EcoFinwize`;
     }).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 

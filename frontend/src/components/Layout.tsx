@@ -40,7 +40,7 @@ export default function Layout() {
 
   useEffect(() => {
     const base = Object.keys(ROUTE_TITLES).find((k) => location.pathname.startsWith(k));
-    document.title = base ? `${ROUTE_TITLES[base]} - Finwize` : "Finwize";
+    document.title = base ? `${ROUTE_TITLES[base]} - EcoFinwize` : "EcoFinwize";
   }, [location.pathname]);
 
   const navItems = [
@@ -57,7 +57,7 @@ export default function Layout() {
       <OfflineBanner />
       <a href="#main-content" className="skip-link">{t("layout.skipToContent") || "Skip to content"}</a>
       {!hideNav && (
-        <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
+        <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-700 px-4 py-3 pt-safe flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-sm">F</div>
             <span className="font-bold text-lg text-gray-800 dark:text-gray-100">{t("layout.finwize")}</span>

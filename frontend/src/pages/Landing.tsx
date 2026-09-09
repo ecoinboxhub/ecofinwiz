@@ -5,7 +5,7 @@ import { useTranslations } from "../i18n/useTranslations";
 
 export default function Landing() {
   const { t } = useTranslations();
-  useEffect(() => { document.title = "Finwize - AI-Powered Financial & Business Guidance"; }, []);
+  useEffect(() => { document.title = "EcoFinwize - AI-Powered Financial & Business Guidance"; }, []);
 
   const features = [
     { icon: MessageCircle, title: t("landing.feature1Title"), desc: t("landing.feature1Desc"), color: "text-sky-500 bg-sky-50" },
@@ -24,7 +24,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <header className="px-4 py-4 flex items-center justify-between max-w-6xl mx-auto w-full">
+      <header className="px-4 py-4 pt-safe flex items-center justify-between max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-sm">F</div>
           <span className="font-bold text-xl text-gray-800 dark:text-gray-100">{t("layout.finwize")}</span>

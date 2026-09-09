@@ -5,7 +5,7 @@ import { Lock, Eye, EyeOff } from "lucide-react";
 import client from "../api/client";
 
 export default function ResetPassword() {
-  useEffect(() => { document.title = "Reset Password - Finwize"; }, []);
+  useEffect(() => { document.title = "Reset Password - EcoFinwize"; }, []);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get("token") || "";

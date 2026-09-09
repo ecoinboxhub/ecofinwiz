@@ -13,7 +13,7 @@ export default function VerifyEmail() {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    document.title = "Verify Email - Finwize";
+    document.title = "Verify Email - EcoFinwize";
     if (!token) { setStatus("error"); return; }
     client.post("/auth/verify-email", { token })
       .then(() => setStatus("success"))

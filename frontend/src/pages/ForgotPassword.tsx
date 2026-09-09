@@ -5,7 +5,7 @@ import { Mail } from "lucide-react";
 import client from "../api/client";
 
 export default function ForgotPassword() {
-  useEffect(() => { document.title = "Forgot Password - Finwize"; }, []);
+  useEffect(() => { document.title = "Forgot Password - EcoFinwize"; }, []);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);

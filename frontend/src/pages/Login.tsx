@@ -8,7 +8,7 @@ import client from "../api/client";
 import { googleAuthVisible } from "../config/google";
 
 export default function Login() {
-  useEffect(() => { document.title = "Login - Finwize"; }, []);
+  useEffect(() => { document.title = "Login - EcoFinwize"; }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);

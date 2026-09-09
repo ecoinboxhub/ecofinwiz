@@ -18,7 +18,7 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    document.title = "Welcome - Finwize";
+    document.title = "Welcome - EcoFinwize";
     if (user?.onboarding_completed) navigate("/dashboard", { replace: true });
   }, [user]);
 

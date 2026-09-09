@@ -5,7 +5,7 @@ import client from "../api/client";
 import { useTranslations } from "../i18n/useTranslations";
 
 export default function PaymentCallback() {
-  useEffect(() => { document.title = "Payment - Finwize"; }, []);
+  useEffect(() => { document.title = "Payment - EcoFinwize"; }, []);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useTranslations();

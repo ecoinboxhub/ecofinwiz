@@ -2,11 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Viewport: proper for iOS PWA standalone + safe areas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+
+    <!-- Branding -->
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0ea5e9" />
-    <meta name="description" content="Finwize - AI-Powered Financial & Business Guidance" />
-    <title>Finwize</title>
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>EcoFinwize — AI-Powered Financial & Business Guidance</title>
+    <meta name="description" content="EcoFinwize — AI-powered financial & business guidance for African youths, SMEs, freelancers, and students. Budgets, savings, markets, learning, and personal AI advisors." />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0EA5E9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="EcoFinwize" />
+
+    <!-- Apple / iOS Safari + Home Screen web app -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="EcoFinwize" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EcoFinwize" />
+    <meta property="og:title" content="EcoFinwize — AI-Powered Financial & Business Guidance" />
+    <meta property="og:description" content="Take control of your finances with AI-driven insights, personalised guidance, and smart tools — built for Africa." />
+    <meta property="og:url" content="https://ecofinwiz.vercel.app/" />
+    <meta property="og:image" content="https://ecofinwiz.vercel.app/icons/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="EcoFinwize — AI-Powered Financial & Business Guidance" />
+    <meta name="twitter:description" content="AI-driven insights and smart tools to take control of your finances." />
+    <meta name="twitter:image" content="https://ecofinwiz.vercel.app/icons/icon-512.png" />
+
+    <!-- Performance: connect early to the production API -->
+    <link rel="preconnect" href="https://ecofinwiz-api.onrender.com" crossorigin />
   </head>
   <body class="bg-gray-50 text-gray-900 antialiased">
     <div id="app"></div>

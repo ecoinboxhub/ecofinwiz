@@ -13,7 +13,7 @@ export default function ArticleDetail() {
     if (!id) return;
     client.get(`/articles/${id}`).then(({ data }) => {
       setArticle(data);
-      document.title = `${data.title} - Finwize`;
+      document.title = `${data.title} - EcoFinwize`;
     }).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 

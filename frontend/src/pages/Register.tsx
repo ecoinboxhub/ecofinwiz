@@ -7,7 +7,7 @@ import { useTranslations } from "../i18n/useTranslations";
 import { googleAuthVisible } from "../config/google";
 
 export default function Register() {
-  useEffect(() => { document.title = "Register - Finwize"; }, []);
+  useEffect(() => { document.title = "Register - EcoFinwize"; }, []);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
