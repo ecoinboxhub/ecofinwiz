@@ -331,6 +331,9 @@ MockClient _mockClient({bool sponsoredAd = false}) {
 
 Future<void> _loadFonts() async {
   const fontDir = 'C:/src/flutter/bin/cache/artifacts/material_fonts';
+  if (!File('$fontDir/roboto-regular.ttf').existsSync()) {
+    return;
+  }
   final loader = FontLoader('Roboto');
   for (final name in ['roboto-regular.ttf', 'roboto-medium.ttf', 'roboto-bold.ttf']) {
     final bytes = await File('$fontDir/$name').readAsBytes();
