@@ -53,9 +53,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final name = context.watch<AuthProvider>().user?['full_name']?.toString().split(' ').first ?? 'User';
-    final budget = _data?['budget'] as Map<String, dynamic>? ?? {};
-    final savings = _data?['savings'] as Map<String, dynamic>? ?? {};
-    final tip = _data?['tip'] as Map<String, dynamic>? ?? {};
+    final budget = _data?['budget'] is Map ? _data!['budget'] as Map : <dynamic, dynamic>{};
+    final savings = _data?['savings'] is Map ? _data!['savings'] as Map : <dynamic, dynamic>{};
+    final tip = _data?['tip'] is Map ? _data!['tip'] as Map : <dynamic, dynamic>{};
     final totalBudget = (budget['total_budget'] ?? 0).toDouble();
     final totalSpent = (budget['total_spent'] ?? 0).toDouble();
     final totalGoal = (savings['total_goal'] ?? 0).toDouble();

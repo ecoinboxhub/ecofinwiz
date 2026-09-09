@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, Shield, BookOpen, Wallet, Sparkles, ArrowRight, Star, Users, Globe, MessageCircle } from "lucide-react";
+import { TrendingUp, Shield, BookOpen, Wallet, Sparkles, ArrowRight, Star, Users, Globe, MessageCircle, Download } from "lucide-react";
 import { useTranslations } from "../i18n/useTranslations";
 
 export default function Landing() {
@@ -54,6 +54,9 @@ export default function Landing() {
             {t("landing.startFree")} <ArrowRight className="w-5 h-5" />
           </Link>
           <Link to="/login" className="btn-secondary text-lg !px-8 !py-3">{t("landing.watchDemo")}</Link>
+          <a href="/downloads/ecofinwiz.apk" download className="btn-secondary text-lg !px-8 !py-3 flex items-center gap-2">
+            <Download className="w-5 h-5" /> {t("landing.downloadApk")}
+          </a>
         </div>
         <div className="flex items-center justify-center gap-8 mt-10">
           {stats.map(({ icon: Icon, value, label }) => (
@@ -93,6 +96,7 @@ export default function Landing() {
           <div className="w-6 h-6 rounded-md bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-xs">F</div>
           <span className="font-semibold text-gray-600 dark:text-gray-400">{t("layout.finwize")}</span>
         </div>
+        <div className="mb-2"><a href="/downloads/ecofinwiz.apk" download className="inline-flex items-center gap-1 text-sky-500 font-medium hover:underline"><Download className="w-3.5 h-3.5" /> {t("landing.downloadApk")}</a></div>
         {t("landing.copyright")}
       </footer>
     </div>
