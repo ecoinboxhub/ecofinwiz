@@ -1,8 +1,11 @@
 // Screenshot capture harness — renders each app screen with mocked API data
 // and writes PNGs via golden files. Run with:
 //   flutter test test/screenshots/screenshots_test.dart --update-goldens
+@Tags(['screenshots'])
+library;
 import 'dart:convert';
 import 'dart:io';
+import 'package:test_api/test_api.dart' show Tags;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

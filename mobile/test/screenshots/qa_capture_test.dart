@@ -2,8 +2,11 @@
 // exercises interactions (chat, calculators, filters, plan generation, shell
 // tab switching) and writes PNGs as golden files. Run with:
 //   flutter test test/screenshots/qa_capture_test.dart --update-goldens
+@Tags(['screenshots'])
+library;
 import 'dart:convert';
 import 'dart:io';
+import 'package:test_api/test_api.dart' show Tags;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -42,7 +42,7 @@ jobs:
         run: flutter analyze --no-pub
 
       - name: Unit tests
-        run: flutter test --no-pub
+        run: flutter test --no-pub --exclude-tags screenshots
 
       - name: Import signing identity & profile
         if: inputs.codesign == true
