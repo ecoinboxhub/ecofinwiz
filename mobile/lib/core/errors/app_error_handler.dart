@@ -1,10 +1,8 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../config/app_config.dart';
 
@@ -22,7 +20,7 @@ class AppErrorHandler {
     _initialized = true;
 
     // Initialize Sentry if DSN is configured
-    final sentryDsn = const String.fromEnvironment('SENTRY_DSN');
+    const sentryDsn = String.fromEnvironment('SENTRY_DSN');
     if (sentryDsn.isNotEmpty) {
       await SentryFlutter.init(
         (options) {
@@ -202,7 +200,7 @@ class _SentryAppWrapper extends StatelessWidget {
 }
 
 class _SentryApp extends StatelessWidget {
-  const _SentryApp({super.key});
+  const _SentryApp();
 
   @override
   Widget build(BuildContext context) {

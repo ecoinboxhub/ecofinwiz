@@ -1,0 +1,126 @@
+name: iOS Build & Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      codesign:
+        description: "Sign with Apple certs (requires Apple secrets configured)"
+        type: boolean
+        default: false
+      upload_appstore:
+        description: "Upload signed .ipa to App Store Connect (TestFlight)"
+        type: boolean
+        default: false
+  push:
+    tags: ["ios-v*"]
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: ./mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.3"
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install CocoaPods
+        run: |
+          (gem list -i cocoapods || sudo gem install cocoapods --no-document) >/dev/null 2>&1
+          pod --version
+
+      - name: Analyze
+        run: flutter analyze --no-pub
+
+      - name: Unit tests
+        run: flutter test --no-pub
+
+      - name: Import signing identity & profile
+        if: inputs.codesign == true
+        env:
+          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          set -e
+          echo "$APPLE_CERT_BASE64" | base64 --decode > /tmp/cert.p12
+          echo "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode > /tmp/profile.mobileprovision
+          security create-keychain -p temp keychain.build 2>/dev/null || true
+          security default-keychain -s keychain.build
+          security unlock-keychain -p temp keychain.build
+          security import /tmp/cert.p12 -k keychain.build -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign 2>/dev/null || true
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k temp keychain.build >/dev/null 2>&1 || true
+          security set-keychain-settings -lut 21600 keychain.build
+          PROV_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin <<< "$(security cms -D -i /tmp/profile.mobileprovision)" 2>/dev/null || grep -a -A1 -B1 -oE "[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}" /tmp/profile.mobileprovision | head -1)
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$PROV_UUID.mobileprovision"
+          echo "PROV_UUID=$PROV_UUID" >> "$GITHUB_ENV"
+
+      - name: Build unsigned .ipa (verify compile)
+        if: inputs.codesign != true
+        run: |
+          flutter build ios --release --no-codesign \
+            --dart-define=FLUTTER_APP_FLAVOR=production \
+            --dart-define=API_BASE_URL=https://ecofinwiz-api.onrender.com/api/v1
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
+          zip -qry EcoFinwize-unsigned.ipa Payload
+          rm -rf Payload
+
+      - name: Build + sign .ipa
+        if: inputs.codesign == true
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -e
+          flutter build ios --release \
+            --dart-define=FLUTTER_APP_FLAVOR=production \
+            --dart-define=API_BASE_URL=https://ecofinwiz-api.onrender.com/api/v1
+          cat > ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.finwize.finwize</key><string>${PROV_UUID}</string>
+            </dict>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ExportOptions.plist
+          mv build/ios/ipa/*.ipa EcoFinwize.ipa
+
+      - name: Upload to TestFlight / App Store Connect
+        if: inputs.codesign == true && inputs.upload_appstore == true
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcrun altool --upload-app --file EcoFinwize.ipa --type ios \
+            --username "$APPLE_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" --verbose
+
+      - name: Upload .ipa artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecofinwize-ios-${{ inputs.codesign == true && 'signed' || 'unsigned' }}
+          path: mobile/EcoFinwize*.ipa
+          retention-days: 30
+          if-no-files-found: error

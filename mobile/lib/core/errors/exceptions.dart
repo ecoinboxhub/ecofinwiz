@@ -76,7 +76,7 @@ AppException exceptionFromResponse(int statusCode, String body) {
     case 404:
       return const NotFoundException('The requested resource was not found.');
     case 429:
-      return RateLimitedException('Too many requests. Please try again later.');
+      return const RateLimitedException('Too many requests. Please try again later.');
     case 500:
     case 502:
     case 503:

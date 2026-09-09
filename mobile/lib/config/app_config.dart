@@ -53,11 +53,11 @@ class AppConfig {
   /// Used by [initializeAppConfig] and as a safe lazy fallback so the app
   /// never crashes on an uninitialized config in tests.
   static AppConfig fromEnvironment() {
-    final flavorString = const String.fromEnvironment('FLUTTER_APP_FLAVOR');
+    const flavorString = String.fromEnvironment('FLUTTER_APP_FLAVOR');
     final flavor = _parseFlavor(flavorString);
 
     // Explicit override via dart-define takes highest priority
-    final overrideUrl = const String.fromEnvironment('API_BASE_URL');
+    const overrideUrl = String.fromEnvironment('API_BASE_URL');
     final apiBaseUrl = overrideUrl.isNotEmpty
         ? overrideUrl
         : _defaultBaseUrlForFlavor(flavor);

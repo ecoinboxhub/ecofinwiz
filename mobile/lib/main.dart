@@ -13,7 +13,6 @@ import 'screens/advisor_screen.dart';
 import 'screens/mentor_screen.dart';
 import 'screens/investment_screen.dart';
 import 'screens/learning_screen.dart';
-import 'services/sync_service.dart';
 import 'widgets/ad_banner.dart';
 import 'widgets/offline_banner.dart';
 import 'widgets/error_fallback.dart';
@@ -23,7 +22,7 @@ Future<void> main() async {
   await initializeAppConfig();
   _installErrorWidgetBuilder();
 
-  final sentryDsn = const String.fromEnvironment('SENTRY_DSN');
+  const sentryDsn = String.fromEnvironment('SENTRY_DSN');
   if (sentryDsn.isNotEmpty) {
     await SentryFlutter.init(
       (options) {
