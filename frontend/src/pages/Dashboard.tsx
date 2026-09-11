@@ -20,21 +20,25 @@ export default function Dashboard() {
   const isSme = user?.persona_type === "sme";
 
   useEffect(() => {
-    Promise.all([
-      client.get("/finance/budgets/summary").catch(() => null),
-      client.get("/finance/transactions?limit=5").catch(() => null),
-      client.get("/finance/savings-goals").catch(() => null),
-      client.get("/tips/daily").catch(() => null),
+    Promise.allSettled([
+      client.get("/finance/budgets/summary"),
+      client.get("/finance/transactions?limit=5"),
+      client.get("/finance/savings-goals"),
+      client.get("/tips/daily"),
     ]).then(([budget, txns, savings, tip]) => {
-      const b = budget?.data || { total_budget: 0, total_spent: 0, remaining: 0, budget_count: 0 };
-      const savingsList = Array.isArray(savings?.data) ? savings.data : savings?.data?.goals || [];
+      const budgetData = budget.status === "fulfilled" ? budget.value?.data : null;
+      const txnsData = txns.status === "fulfilled" ? txns.value?.data : null;
+      const savingsData = savings.status === "fulfilled" ? savings.value?.data : null;
+      const tipData = tip.status === "fulfilled" ? tip.value?.data : null;
+      const b = budgetData || { total_budget: 0, total_spent: 0, remaining: 0, budget_count: 0 };
+      const savingsList: any[] = Array.isArray(savingsData) ? savingsData : savingsData?.goals ?? [];
       const totalGoal = savingsList.reduce((s: number, g: any) => s + (g.target_amount || 0), 0);
       const totalSaved = savingsList.reduce((s: number, g: any) => s + (g.current_amount || 0), 0);
       setData({
         budget_summary: b,
-        recent_transactions: Array.isArray(txns?.data) ? txns.data : txns?.data?.transactions || [],
+        recent_transactions: Array.isArray(txnsData) ? txnsData : txnsData?.transactions ?? [],
         savings_summary: { total_goal: totalGoal, total_saved: totalSaved, goal_count: savingsList.length },
-        daily_tip: tip?.data || { tip: t("dashboard.dailyTip"), category: t("dashboard.finance") },
+        daily_tip: tipData || { tip: t("dashboard.dailyTip"), category: t("dashboard.finance") },
       });
     });
   }, []);

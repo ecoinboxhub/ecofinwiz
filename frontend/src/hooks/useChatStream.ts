@@ -146,9 +146,6 @@ export function useChatStream({ endpoint, language, onError }: UseChatStreamOpti
     } catch (err: any) {
       if (err.name === "AbortError") return;
       onError?.(err.message || "Request failed");
-      setLoading(false);
-      abortRef.current = null;
-      return;
     } finally {
       setLoading(false);
       abortRef.current = null;
