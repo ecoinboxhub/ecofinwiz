@@ -24,7 +24,9 @@ async def _activate_subscription(db: AsyncSession, email: str, plan: str, provid
         raise HTTPException(status_code=404, detail="User not found")
 
     user.plan = plan
-    sub_result = await db.execute(select(Subscription).where(Subscription.user_id == user.id))
+    sub_result = await db.execute(
+        select(Subscription).where(Subscription.user_id == user.id).with_for_update()
+    )
     sub = sub_result.scalar_one_or_none()
     if not sub:
         sub = Subscription(user_id=user.id)
@@ -37,7 +39,12 @@ async def _activate_subscription(db: AsyncSession, email: str, plan: str, provid
     sub.current_period_start = datetime.now(timezone.utc)
     sub.current_period_end = datetime.now(timezone.utc) + timedelta(days=30)
     sub.auto_renew = True
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception as exc:
+        await db.rollback()
+        logger.error("Failed to commit subscription for %s: %s", email, exc)
+        raise HTTPException(status_code=500, detail="Failed to activate subscription") from exc
     await db.refresh(sub)
     await db.refresh(user)
 

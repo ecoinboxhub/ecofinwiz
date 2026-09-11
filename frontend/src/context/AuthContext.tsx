@@ -20,10 +20,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     const token = localStorage.getItem("access_token");
     if (token) {
-      client.get("/users/me").then(({ data }) => setUser(data)).catch(() => logout()).finally(() => setLoading(false));
-    } else setLoading(false);
+      client.get("/users/me")
+        .then(({ data }) => { if (mounted) setUser(data); })
+        .catch(() => { if (mounted) logout(); })
+        .finally(() => { if (mounted) setLoading(false); });
+    } else {
+      setLoading(false);
+    }
+    return () => { mounted = false; };
   }, []);
 
   const login = async (email: string, password: string) => {
